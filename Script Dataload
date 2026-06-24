@@ -1,0 +1,134 @@
+#Setup
+!pip install yfinance --quiet
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import warnings
+warnings.filterwarnings('ignore')
+print("✅ Libraries ready")
+
+#Download Tickers avec une list
+tickers = [
+    "AC.PA",     # Accor
+    "AI.PA",     # Air Liquide
+    "AIR.PA",    # Airbus
+    "MT.AS",     # ArcelorMittal
+    "ATO.PA",    # Atos
+    "CS.PA",     # AXA
+    "BNP.PA",    # BNP Paribas
+    "EN.PA",     # Bouygues
+    "CAP.PA",    # Capgemini
+    "CA.PA",     # Carrefour
+    "ACA.PA",    # Crédit Agricole
+    "BN.PA",     # Danone
+    "DSY.PA",    # Dassault Systèmes
+    "ENGI.PA",   # Engie
+    "EL.PA",     # EssilorLuxottica
+    "RMS.PA",    # Hermès
+    "KER.PA",    # Kering
+    "OR.PA",     # L'Oréal
+    "LR.PA",     # Legrand
+    "MC.PA",     # LVMH
+    "ML.PA",     # Michelin
+    "ORA.PA",    # Orange
+    "RI.PA",     # Pernod Ricard
+    "PUB.PA",    # Publicis
+    "RNO.PA",    # Renault
+    "SAF.PA",    # Safran
+    "SGO.PA",    # Saint-Gobain
+    "SAN.PA",    # Sanofi
+    "SU.PA",     # Schneider Electric
+    "GLE.PA",    # Société Générale
+    "SW.PA",     # Sodexo
+    "STMPA.PA",  # STMicroelectronics
+    "TEP.PA",    # Teleperformance
+    "HO.PA",     # Thales
+    "TTE.PA",    # TotalEnergies
+    "URW.AS",    # Unibail Rodamco
+    "VIE.PA",    # Veolia
+    "DG.PA",     # Vinci
+    "VIV.PA",    # Vivendi
+    "WLN.PA"     # Worldline]
+
+#trier par secteur avec un disctionnaire
+sectors_data = {
+    # Luxury
+    "MC.PA": "Luxury",      # LVMH
+    "RMS.PA": "Luxury",     # Hermès
+    "KER.PA": "Luxury",     # Kering
+
+    # Consumer
+    "OR.PA": "Consumer",    # L'Oréal
+    "BN.PA": "Consumer",    # Danone
+    "CA.PA": "Consumer",    # Carrefour
+    "RI.PA": "Consumer",    # Pernod Ricard
+
+    # Financials
+    "BNP.PA": "Financials", # BNP Paribas
+    "ACA.PA": "Financials", # Crédit Agricole
+    "GLE.PA": "Financials", # Société Générale
+
+    # Healthcare
+    "SAN.PA": "Healthcare", # Sanofi
+    "EL.PA": "Healthcare",  # EssilorLuxottica
+
+    # Industrials
+    "AIR.PA": "Industrials", # Airbus
+    "DG.PA": "Industrials",  # Vinci
+    "HO.PA": "Industrials",  # Thales
+    "SAF.PA": "Industrials", # Safran
+    "EN.PA": "Industrials",  # Bouygues
+
+    # Technology
+    "CAP.PA": "Technology", # Capgemini
+    "DSY.PA": "Technology", # Dassault Systèmes
+    "STMPA.PA": "Technology", # STMicroelectronics
+    "WLN.PA": "Technology", # Worldline
+
+    # Energy & Utilities
+    "TTE.PA": "Energy",     # TotalEnergies
+    "ENGI.PA": "Energy",    # Engie
+    "VIE.PA": "Utilities",  # Veolia
+
+    # Materials
+    "AI.PA": "Materials",   # Air Liquide
+    "SGO.PA": "Materials",  # Saint-Gobain
+
+    # Real Estate
+    "URW.AS": "Real Estate",
+
+    # Telecom & Communication
+    "ORA.PA": "Communication", # Orange
+    "VIV.PA": "Communication", # Vivendi
+
+    # Services
+    "AC.PA": "Services",    # Accor
+    "SW.PA": "Services",    # Sodexo
+    "TEP.PA": "Services",   # Teleperformance
+
+    # Automotive
+    "RNO.PA": "Automotive", # Renault
+    "ML.PA": "Automotive",  # Michelin
+
+    # Misc
+    "ATO.PA": "Technology" # Atos}
+
+
+sectors = pd.DataFrame(
+    list(sectors_data.items()),
+    columns=["Ticker", "Sector"])
+
+print(f"Downloading {len(tickers)} stocks…")
+data = yf.download(tickers, start="2023-06-01", end="2026-06-01", progress=True)
+
+prices = data["Close"].copy()
+if isinstance(prices.columns, pd.MultiIndex):
+    prices.columns = [c[0] if isinstance(c, tuple) else c for c in prices.columns]
+
+prices.index.name = "Date"
+prices = prices.ffill()
+returns = prices.pct_change().dropna()
+
+print(f"\n✅ Data loaded: {prices.shape[1]} stocks × {prices.shape[0]} trading days")
