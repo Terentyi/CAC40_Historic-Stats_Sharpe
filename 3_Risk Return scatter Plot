@@ -1,23 +1,23 @@
 #remove Atos
 
-... stock_stats = stock_stats[
-...     stock_stats["Ticker"] != "ATO.PA"
-... ]
-...
-... plt.figure(figsize=(12, 7))
-... plt.scatter(stock_stats['annualised_vol'], stock_stats['annualised_return'],
-...             alpha=0.7, s=60, color='teal')
-...
-... for _, row in stock_stats.iterrows():
-...     plt.annotate(row['Ticker'],
-...                  (row['annualised_vol'], row['annualised_return']),
-...                  fontsize=7, alpha=0.8)
-...
-... plt.title('Risk-Return: Annualised Volatility vs Return', fontsize=14)
-... plt.xlabel('Annualised Volatility')
-... plt.ylabel('Annualised Return')
-... plt.axhline(0, color='grey', linewidth=0.5)
-... plt.grid(alpha=0.2)
-... plt.tight_layout()
-... plt.show()
-...
+stock_stats = stock_stats[
+  stock_stats["Ticker"] != "ATO.PA"
+]
+
+plt.figure(figsize=(12, 7))
+plt.scatter(stock_stats['annualised_vol'], stock_stats['annualised_return'],
+             alpha=0.7, s=60, color='teal')
+
+for _, row in stock_stats.iterrows():
+     plt.annotate(row['Ticker'],
+                  (row['annualised_vol'], row['annualised_return']),
+                  fontsize=7, alpha=0.8)
+
+ plt.title('Risk-Return: Annualised Volatility vs Return', fontsize=14)
+ plt.xlabel('Annualised Volatility')
+ plt.ylabel('Annualised Return')
+ plt.axhline(0, color='grey', linewidth=0.5)
+ plt.grid(alpha=0.2)
+ plt.tight_layout()
+ plt.show()
+
