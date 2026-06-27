@@ -10,8 +10,7 @@ plt.scatter(
     stock_stats['annualised_return'],
     alpha=0.7,
     s=60,
-    color='teal'
-)
+    color='teal')
 
 for _, row in stock_stats.iterrows():
     plt.annotate(
